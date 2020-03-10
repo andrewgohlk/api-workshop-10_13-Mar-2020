@@ -81,6 +81,7 @@ app.get('/information', (req, resp) => {
     //Weather for city is in cityName variable
     //API key is in keys.weather
     const params = {
+        // Updated by AndrewGoh, 2020-03-10.
         q: cityName,
         appid: keys.weather
     }
@@ -95,6 +96,7 @@ app.get('/information', (req, resp) => {
             //The 2 character country code is found in countryCode variable
             //API key is in keys.news
             const params = {
+                // Updated by AndrewGoh, 2020-03-10.
                 category: 'technology',
                 pageSize: 30,
                 apiKey: keys.news
