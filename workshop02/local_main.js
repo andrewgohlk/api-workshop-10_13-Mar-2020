@@ -90,7 +90,7 @@ app.post('/api/city',
 		}
 		// Passed validation
 		// Insert data into database.
-		// TODO loc -> [123, 123]
+		// TODO loc = "number, number" => [ number, number ]
 		db.insertCity(body)
 
 		resp.status(201)
