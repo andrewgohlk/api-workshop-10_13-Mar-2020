@@ -59,12 +59,13 @@ app.get('/api/state/:state',
 )
 
 // TODO DELETE /api/city/:name
-// Added by Andrew Goh, 2020-03-11.
-/* app.get('/api/city/:name',
+// Added by Andrew Goh, 2020-03-12.
+app.delete('/api/city/:name',
 	(req, resp) => { // Request handler
 		const name = req.params.name
 
-		const result = db.delete()	// No DB service for delete.
+		// No DB service for delete.
+		//const result = db.deleteByName(name)	
 		//console.info(result)
 
 		// status code
@@ -72,9 +73,9 @@ app.get('/api/state/:state',
 
 		// set Content-Type
 		resp.type('application/json')
-		resp.json(result)
+		resp.json({message: "Deleted: city = '"+name+"'"})
 	}
-) */
+)
 
 // TODO GET /api/city/:cityId
 // Added by Andrew Goh, 2020-03-11.
@@ -129,7 +130,7 @@ app.post('/api/city',
 
 		resp.status(201)
 		resp.type('application/json')
-		resp.json({message: 'Created.'})
+		resp.json({message: 'Created.', body})
 	}
 )
 
@@ -164,8 +165,8 @@ app.get('/api/state/:state/count',
 // TODO GET /api/city/:name
 // Added by Andrew Goh, 2020-03-11.
 // Can't work, always return null; because conflict with resource '/api/city/:cityId'
-// Changed resource to '/api/citi/:name'.
-app.get('/api/citi/:name',
+// Changed resource to '/api/city/name/:name'.
+app.get('/api/city/name/:name',
 	(req, resp) => { // Request handler
 		const name = req.params.name
 
