@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Mandatory workshop
 // TODO GET /api/states
+// Added by Andrew Goh, 2020-03-11.
 app.get('/api/states',
 	(req, resp) => { // Request handler
 		const result = db.findAllStates();
@@ -33,6 +34,7 @@ app.get('/api/states',
 )
 
 // TODO GET /api/state/:state
+// Added by Andrew Goh, 2020-03-11.
 app.get('/api/state/:state',
 	(req, resp) => { // Request handler
 		// Read the value from the route :state
@@ -44,9 +46,9 @@ app.get('/api/state/:state',
 
 		// Default 10 records
 		const result = db.findCitiesByState(state,
-				{offset, limit}		// Shortform if key = value variable.
-				// {offset: offset, limit: limit}
-			);
+			{offset, limit}		// Shortform if key = value variable.
+			// {offset: offset, limit: limit}
+		);
 		// status code
 		resp.status(200)
 
@@ -57,13 +59,31 @@ app.get('/api/state/:state',
 )
 
 // TODO DELETE /api/city/:name
+// Added by Andrew Goh, 2020-03-11.
+/* app.get('/api/city/:name',
+	(req, resp) => { // Request handler
+		const name = req.params.name
+
+		const result = db.delete()	// No DB service for delete.
+		//console.info(result)
+
+		// status code
+		resp.status(200)
+
+		// set Content-Type
+		resp.type('application/json')
+		resp.json(result)
+	}
+) */
 
 // TODO GET /api/city/:cityId
+// Added by Andrew Goh, 2020-03-11.
 app.get('/api/city/:cityId',
 	(req, resp) => { // Request handler
 		const cityId = req.params.cityId
 
 		const result = db.findCityById(cityId)
+		//console.info(result)
 
 		// status code
 		resp.status(200)
@@ -75,6 +95,7 @@ app.get('/api/city/:cityId',
 )
 
 // TODO POST /api/city
+// Added by Andrew Goh, 2020-03-11.
 // Content-Type: application/x-www-form-urlencoded
 app.post('/api/city',
 	(req, resp) => {
@@ -91,7 +112,20 @@ app.post('/api/city',
 		// Passed validation
 		// Insert data into database.
 		// TODO loc = "number, number" => [ number, number ]
-		db.insertCity(body)
+
+		// Convert loc 'number,number' => [ number, number ]
+		const loc = body['loc'].split(',');
+		var loc_new = new Array;
+		loc_new[0] = parseInt(loc[0]);
+		loc_new[1] = parseInt(loc[1]);
+		body['loc'] = loc_new;
+		
+		// Convert 'pop' to integer values.
+		body['pop'] = parseInt(body['pop']);
+		console.info('loc_new =', loc_new);
+		console.info('body (new) =', body);
+
+		db.insertCity(body);
 
 		resp.status(201)
 		resp.type('application/json')
@@ -106,6 +140,7 @@ app.post('/api/city',
 
 
 // TODO GET /state/:state/count
+// Added by Andrew Goh, 2020-03-11.
 app.get('/api/state/:state/count',
 	(req, resp) => { // Request handler
 		const state = req.params.state
@@ -127,7 +162,22 @@ app.get('/api/state/:state/count',
 )
 
 // TODO GET /api/city/:name
+// Added by Andrew Goh, 2020-03-11.
+// Can't work, always return null; because conflict with resource '/api/city/:cityId'
+// Changed resource to '/api/citi/:name'.
+app.get('/api/citi/:name',
+	(req, resp) => { // Request handler
+		const name = req.params.name
 
+		const result = db.findCitiesByName(name)
+		// status code
+		resp.status(200)
+
+		// set Content-Type
+		resp.type('application/json')
+		resp.json(result)
+	}
+)
 
 // End of workshop
 
