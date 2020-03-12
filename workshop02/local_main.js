@@ -68,7 +68,7 @@ app.delete('/api/city/:name',
 		//const result = db.deleteByName(name)	
 		//console.info(result)
 
-		// Nevertheless, fake the response.
+		// Nevertheless, fake the response to browser.
 		// status code
 		resp.status(200)
 
