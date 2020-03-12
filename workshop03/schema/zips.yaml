@@ -66,7 +66,13 @@ components:
               "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
               "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
               "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
-              "NV", "CA", "HI", "OR", "WA", "AK" ]
+              "NV", "CA", "HI", "OR", "WA", "AK",
+			        "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+              "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
+              "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
+              "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
+              "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
+              "nv", "ca", "hi", "or", "wa", "ak" ]
 
     city:
       type: object
@@ -94,4 +100,10 @@ components:
                   "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
                   "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
                   "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
-                  "NV", "CA", "HI", "OR", "WA", "AK" ]
+                  "NV", "CA", "HI", "OR", "WA", "AK",
+                  "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+                  "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
+                  "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
+                  "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
+                  "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
+                  "nv", "ca", "hi", "or", "wa", "ak" ]
