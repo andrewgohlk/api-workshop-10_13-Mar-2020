@@ -1,0 +1,97 @@
+openapi: "3.0.3"
+info:
+  title: "ZIPs REST API"
+  description: "My first API"
+  version: "v1.0"
+
+# This is a list of servers.
+servers:
+  - url: http://localhost:3000
+    description: "Development server"
+
+paths:
+  /api/states:
+    get:
+      description: "Get a list of all the states"
+      operationId: getStates
+
+      responses:
+        200:
+          description: "Default result representation"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /api/state/{stateId}:
+    get:
+      description: "Get a list of all the states"
+      operationId: getCitiesFromState
+      parameters:
+      - name: stateId
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/states"
+
+      - name: offset
+        in: query
+        schema:
+          type: integer
+          minimum: 0
+    
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 20
+
+      responses:
+        200:
+          description: "Default result representation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/city"
+
+components:
+  schemas:
+    states:
+      type: string
+      enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
+              "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
+              "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
+              "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
+              "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
+              "NV", "CA", "HI", "OR", "WA", "AK" ]
+
+    city:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Id
+        city:
+          type: string
+          description: City name
+        loc:
+          type: array
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+          example: [ 123.45, 678.90 ]
+        pop:
+          type: integer
+          minimum: 10
+        state:
+          type: string
+          enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
+                  "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
+                  "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
+                  "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
+                  "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
+                  "NV", "CA", "HI", "OR", "WA", "AK" ]
