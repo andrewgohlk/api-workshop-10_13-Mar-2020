@@ -1,3 +1,6 @@
+# Workshop03
+# Modified by Andrew Goh, 2020-03-12.
+ 
 openapi: "3.0.3"
 info:
   title: "ZIPs REST API"
@@ -9,12 +12,12 @@ servers:
   - url: http://localhost:3000
     description: "Development server"
 
+# This is a list of paths/resources & their parameters.
 paths:
   /api/states:
     get:
       description: "Get a list of all the states"
       operationId: getStates
-
       responses:
         200:
           description: "Default result representation"
@@ -27,7 +30,7 @@ paths:
 
   /api/state/{stateId}:
     get:
-      description: "Get a list of all the states"
+      description: "Get a list of cities from state Id"
       operationId: getCitiesFromState
       parameters:
       - name: stateId
@@ -35,20 +38,17 @@ paths:
         required: true
         schema:
           $ref: "#/components/schemas/states"
-
       - name: offset
         in: query
         schema:
           type: integer
           minimum: 0
-    
       - name: limit
         in: query
         schema:
           type: integer
           minimum: 1
           maximum: 20
-
       responses:
         200:
           description: "Default result representation"
@@ -57,34 +57,128 @@ paths:
               schema:
                 $ref: "#/components/schemas/city"
 
+  /api/city/{cityId}:
+    get:
+      description: "Get a city by city Id"
+      operationId: getCityById
+      parameters:
+      - name: cityId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "Default result representation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/city"
+
+  /api/city/name/{cityName}:
+    get:
+      description: "Get a city by name"
+      operationId: getCityByName
+      parameters:
+      - name: cityName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "Default result representation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/city"
+
+  # OpenAPI cannot support computed value.
+  # /api/state/{stateId}/count:
+  #   get:
+  #     description: "Get a count of cities by state Id"
+  #     operationId: getCountOfCitiesByState
+  #     parameters:
+  #     - name: stateId
+  #       in: path
+  #       required: true
+  #       schema:
+  #         $ref: "#/components/schemas/states"
+  #     responses:
+  #       200:
+  #         description: "Default result representation"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 state:
+  #                   $ref: "#/components/schemas/states"
+  #                 numOfCities:
+  #                   type: integer
+  #                   description: "Count of cities in state"
+  #                 timestamp:
+  #                   type: string
+  #                   format: date
+
+  # POST
+  /api/city:
+    post:
+      tags:
+      - city
+      summary: "Add a city record"
+      operationId: addCity
+      requestBody:
+        required: true
+        # Content-Type
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/city-form"
+          application/json:
+            schema:
+              $ref: "#/components/schemas/city"
+      responses:
+        201:
+          description: "Record created"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+
 components:
   schemas:
     states:
       type: string
-      enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
-              "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
-              "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
-              "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
-              "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
-              "NV", "CA", "HI", "OR", "WA", "AK",
-              "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
-              "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
-              "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
-              "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
-              "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
-              "nv", "ca", "hi", "or", "wa", "ak" ]
+      enum: [ "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+            "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
+            "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
+            "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
+            "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
+            "nv", "ca", "hi", "or", "wa", "ak" ]
 
     city:
       type: object
+      required:
+        - city
+        - loc
+        - pop
+        - state
       properties:
         _id:
           type: string
-          description: Id
+          description: "Id"
         city:
           type: string
-          description: City name
+          description: "City name"
         loc:
           type: array
+          description: "Location of city in [ Lat, Long ]"
           items:
             type: number
           minItems: 2
@@ -92,16 +186,44 @@ components:
           example: [ 123.45, 678.90 ]
         pop:
           type: integer
+          description: "Population of city"
           minimum: 10
         state:
           type: string
-          enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
-                  "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
-                  "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
-                  "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
-                  "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
-                  "NV", "CA", "HI", "OR", "WA", "AK",
-                  "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+          description: "State Id"
+          enum: [ "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+                  "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
+                  "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
+                  "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
+                  "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
+                  "nv", "ca", "hi", "or", "wa", "ak" ]
+
+    city-form:
+      type: object
+      required:
+        - city
+        - lat
+        - lng
+        - pop
+        - state
+      properties:
+        city:
+          type: string
+          description: "City name"
+        lat:
+          type: number
+          description: "City's latitude"
+        lng:
+          type: number
+          description: "City's longitude"
+        pop:
+          type: integer
+          description: "Population of city"
+          minimum: 10
+        state:
+          type: string
+          description: "State Id"
+          enum: [ "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
                   "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
                   "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
                   "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",

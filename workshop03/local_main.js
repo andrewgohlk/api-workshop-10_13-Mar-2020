@@ -1,6 +1,9 @@
 const { join } = require('path');
 const fs = require('fs');
 
+// Load the library
+const preconditions = require('express-preconditions');
+
 const cors = require('cors');
 const range = require('express-range')
 const compression = require('compression')
@@ -19,6 +22,8 @@ const CitiesDB = require('./zipsdb')
 const db = CitiesDB(data);
 
 const app = express();
+// Disable express etag.
+app.set('etag', false)
 
 app.use(cors());
 app.use(express.json());
@@ -28,6 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Start of workshop
+var count=0
 
 // TODO 1/2 Load schemas
 new OpenAPIValidator({
@@ -44,9 +50,16 @@ new OpenAPIValidator({
     // Added by Andrew Goh, 2020-03-11.
     app.get('/api/states',
         (req, resp) => { // Request handler
+            count++
+            console.info('In GET /api/states: ', count)
+
             const result = db.findAllStates();
             // status code
             resp.status(200)
+
+            // Use Cache-Control in headers for Time Based Caching.
+            // Set header, public, age = 5 min
+            resp.set('Cache-Control', 'public, maxAge=300')
 
             // set Content-Type
             resp.type('application/json')
@@ -56,9 +69,25 @@ new OpenAPIValidator({
         }
     )
 
+    // Use Etag for Content Based Caching.
+    const options = {
+        stateAsync: (req) => {
+            const state = req.params.state;
+            const offset = parseInt(req.query.offset) || 0;
+            const limit = parseInt(req.query.limit) || 10;
+            return Promise.resolve({
+                // state_offset_limit
+                // E.g. CA_0_10
+                etag: `"${state}_${offset}_${limit}"`
+            })
+        }
+    }
+
     // TODO GET /api/state/:state
     // Added by Andrew Goh, 2020-03-11.
     app.get('/api/state/:state',
+        // Use the Etag here before the Request handler.
+        preconditions(options),
         (req, resp) => { // Request handler
             // Read the value from the route :state
             const state = req.params.state
@@ -77,6 +106,10 @@ new OpenAPIValidator({
 
             // set Content-Type
             resp.type('application/json')
+
+            // Set E-tag
+            resp.set("ETag", `"${state}_${offset}_${limit}"`)
+
             resp.json(result)
         }
     )
@@ -128,33 +161,35 @@ new OpenAPIValidator({
             console.info('body =', body);
 
             // Validate body.
-            if (!db.validateForm(body)) {
-                resp.status(400)
-                resp.type('application/json')
-                resp.json({'message': 'Incomplete form'})
-                return
-            }
+            // if (!db.validateForm(body)) {
+            //     resp.status(400)
+            //     resp.type('application/json')
+            //     resp.json({'message': 'Incomplete form'})
+            //     return
+            // }
+
             // Passed validation
             // Insert data into database.
             // TODO loc = "number, number" => [ number, number ]
 
             // Convert loc 'number,number' => [ number, number ]
-            const loc = body['loc'].split(',');
-            var loc_new = new Array;
-            loc_new[0] = parseInt(loc[0]);
-            loc_new[1] = parseInt(loc[1]);
-            body['loc'] = loc_new;
+            // const loc = body['loc'].split(',');
+            // var loc_new = new Array;
+            // loc_new[0] = parseInt(loc[0]);
+            // loc_new[1] = parseInt(loc[1]);
+            // body['loc'] = loc_new;
             
-            // Convert 'pop' to integer values.
-            body['pop'] = parseInt(body['pop']);
-            console.info('loc_new =', loc_new);
-            console.info('body (new) =', body);
+            // // Convert 'pop' to integer values.
+            // body['pop'] = parseInt(body['pop']);
+            // console.info('loc_new =', loc_new);
+            // console.info('body (new) =', body);
 
             db.insertCity(body);
 
             resp.status(201)
             resp.type('application/json')
-            resp.json({message: 'Created.', body})
+            // resp.json({message: 'Created.', body})
+            resp.json({message: 'Created.'})
         }
     )
 
