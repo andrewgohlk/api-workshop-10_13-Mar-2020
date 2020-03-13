@@ -268,7 +268,7 @@ components:
         state:
           type: string
           description: "State Id"
-          # Some using Talend API Tester, need to use both Full CAPS & lower caps.
+          # Somehow using Talend API Tester, need to use both Full CAPS & lower caps.
           enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
                   "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
                   "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
