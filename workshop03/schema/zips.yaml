@@ -1,5 +1,6 @@
-# Workshop03
-# Modified by Andrew Goh, 2020-03-12.
+# Workshop03/04.
+# Modified by Andrew Goh, 2020-03-12 - workshop03.
+# Modified by Andrew Goh, 2020-03-13 - workshop04.
  
 openapi: "3.0.3"
 info:
@@ -14,6 +15,7 @@ servers:
 
 # This is a list of paths/resources & their parameters.
 paths:
+  # GET /api/states resource path.
   /api/states:
     get:
       description: "Get a list of all the states"
@@ -28,6 +30,7 @@ paths:
                 items:
                   type: string
 
+  # GET /api/state/{stateId} resource path.
   /api/state/{stateId}:
     get:
       description: "Get a list of cities from state Id"
@@ -57,6 +60,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/city"
 
+  # GET /api/city/{cityId} resource path.
   /api/city/{cityId}:
     get:
       description: "Get a city by city Id"
@@ -75,6 +79,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/city"
 
+  # GET /api/city/name/{cityName} resource path.
   /api/city/name/{cityName}:
     get:
       description: "Get a city by name"
@@ -93,35 +98,46 @@ paths:
               schema:
                 $ref: "#/components/schemas/city"
 
-  # OpenAPI cannot support computed value.
-  # /api/state/{stateId}/count:
-  #   get:
-  #     description: "Get a count of cities by state Id"
-  #     operationId: getCountOfCitiesByState
-  #     parameters:
-  #     - name: stateId
-  #       in: path
-  #       required: true
-  #       schema:
-  #         $ref: "#/components/schemas/states"
-  #     responses:
-  #       200:
-  #         description: "Default result representation"
-  #         content:
-  #           application/json:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 state:
-  #                   $ref: "#/components/schemas/states"
-  #                 numOfCities:
-  #                   type: integer
-  #                   description: "Count of cities in state"
-  #                 timestamp:
-  #                   type: string
-  #                   format: date
+  # GET /api/state/{stateId}/count resource path.
+  /api/state/{stateId}/count:
+    get:
+      description: "Get a count of cities by state Id"
+      operationId: getCountOfCitiesByState
+      parameters:
+      - name: stateId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: "Default result representation"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+                    enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
+                            "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
+                            "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
+                            "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
+                            "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
+                            "NV", "CA", "HI", "OR", "WA", "AK",
+                            "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+                            "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
+                            "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
+                            "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
+                            "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
+                            "nv", "ca", "hi", "or", "wa", "ak" ]
+                  numOfCities:
+                    type: integer
+                    description: "Count of cities in state"
+                  timestamp:
+                    type: string
 
-  # POST
+  # POST /api/city resource path.
   /api/city:
     post:
       tags:
@@ -151,17 +167,27 @@ paths:
                   message:
                     type: string
 
+# Componets/schemas definitions.
 components:
   schemas:
+    # states schema, used for GET /api/state/{stateId}.
     states:
       type: string
-      enum: [ "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
-            "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
-            "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
-            "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
-            "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
-            "nv", "ca", "hi", "or", "wa", "ak" ]
+      enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
+              "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
+              "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
+              "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
+              "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
+              "NV", "CA", "HI", "OR", "WA", "AK",
+              "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+              "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
+              "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
+              "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
+              "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
+              "nv", "ca", "hi", "or", "wa", "ak" ]
 
+    # city schema, used for GET /api/state/{stateId}, /api/city/{cityId}, /api/city/name/{cityName} responses.
+    # Also for POST /api/city JSON schema validation.
     city:
       type: object
       required:
@@ -191,13 +217,20 @@ components:
         state:
           type: string
           description: "State Id"
-          enum: [ "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+          enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
+                  "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
+                  "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
+                  "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
+                  "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
+                  "NV", "CA", "HI", "OR", "WA", "AK",
+                  "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
                   "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
                   "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
                   "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
                   "ar", "ok", "tx", "co", "wy", "id", "ut", "az", "nm",
                   "nv", "ca", "hi", "or", "wa", "ak" ]
 
+    # city-form schema, used for POST /api/city Form validation.
     city-form:
       type: object
       required:
@@ -223,7 +256,14 @@ components:
         state:
           type: string
           description: "State Id"
-          enum: [ "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
+          # Some using Talend API Tester, need to use both Full CAPS & lower caps.
+          enum: [ "MA", "RI", "NH", "ME", "VT", "CT", "NY", "NJ", "PA",
+                  "DE", "DC", "MD", "VA", "WV", "NC", "SC", "GA", "FL",
+                  "AL", "TN", "MS", "KY", "OH", "IN", "MI", "IA", "WI",
+                  "MN", "SD", "ND", "MT", "IL", "MO", "KS", "NE", "LA",
+                  "AR", "OK", "TX", "CO", "WY", "ID", "UT", "AZ", "NM",
+                  "NV", "CA", "HI", "OR", "WA", "AK",
+                  "ma", "ri", "nh", "me", "vt", "ct", "ny", "nj", "pa",
                   "de", "dc", "md", "va", "wv", "nc", "sc", "ga", "fl",
                   "al", "tn", "ms", "ky", "oh", "in", "mi", "ia", "wi",
                   "mn", "sd", "nd", "mt", "il", "mo", "ks", "ne", "la",
