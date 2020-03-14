@@ -190,7 +190,7 @@ paths:
   # /api/city/{cityName}:
   #   delete:
   #     description: "Delete a city"
-  #     operationId: deleteCityByName
+  #     operationId: delCityByName
   #     parameters:
   #     - name: cityName
   #       in: path
