@@ -13,9 +13,10 @@ servers:
   - url: http://localhost:3000
     description: "Development server"
 
+#==============================================================================
 # This is a list of paths/resources & their parameters.
 paths:
-  # GET /api/states resource path.
+  # GET /api/states resource.
   /api/states:
     get:
       description: "Get a list of all the states"
@@ -30,7 +31,7 @@ paths:
                 items:
                   type: string
 
-  # GET /api/state/{stateId} resource path.
+  # GET /api/state/{stateId} resource.
   /api/state/{stateId}:
     get:
       description: "Get a list of cities from state Id"
@@ -60,7 +61,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/city"
 
-  # GET /api/city/{cityId} resource path.
+  # GET /api/city/{cityId} resource.
   /api/city/{cityId}:
     get:
       description: "Get a city by city Id"
@@ -79,7 +80,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/city"
 
-  # GET /api/city/name/{cityName} resource path.
+  # GET /api/city/name/{cityName} resource.
   /api/city/name/{cityName}:
     get:
       description: "Get a city by name"
@@ -98,7 +99,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/city"
 
-  # GET /api/state/{stateId}/count resource path.
+  # GET /api/state/{stateId}/count resource.
   /api/state/{stateId}/count:
     get:
       description: "Get a count of cities by state Id"
@@ -149,12 +150,13 @@ paths:
                   timestamp:
                     type: string
 
-  # POST /api/city resource path.
+  #----------------------------------------------------------------------------
+  # POST /api/city resource.
   /api/city:
     post:
       tags:
       - city
-      summary: "Add a city record"
+      summary: "Add a city"
       operationId: addCity
       requestBody:
         required: true
@@ -168,17 +170,47 @@ paths:
               $ref: "#/components/schemas/city"
       responses:
         201:
-          description: "Record created"
+          description: "Record created representation"
           content:
             application/json:
               schema:
                 type: object
                 required:
                   - message
+                  - body
                 properties:
                   message:
                     type: string
+                  body:
+                    type: object
 
+  #----------------------------------------------------------------------------
+  # Commented out, keep getting 405, "message": "DELETE method not allowed" exception.
+  # DELETE /api/city/{cityName} resource.
+  # /api/city/{cityName}:
+  #   delete:
+  #     description: "Delete a city"
+  #     operationId: deleteCityByName
+  #     parameters:
+  #     - name: cityName
+  #       in: path
+  #       required: true
+  #       schema:
+  #         type: string
+  #     responses:
+  #       200:
+  #         description: "Record deleted representation"
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: object
+  #               required:
+  #                 - message
+  #               properties:
+  #                 message:
+  #                   type: string
+
+#==============================================================================
 # Componets/schemas definitions.
 components:
   schemas:

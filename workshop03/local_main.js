@@ -188,8 +188,7 @@ new OpenAPIValidator({
 
             resp.status(201)
             resp.type('application/json')
-            // resp.json({message: 'Created.', body})
-            resp.json({message: 'Created.'})
+            resp.json({message: 'Created.', body})
         }
     )
 
